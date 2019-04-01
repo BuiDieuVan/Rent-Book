@@ -1,7 +1,9 @@
 
-var mongoose = require('mongoose');
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose');
+
+const Schema = mongoose.Schema;
 const bcrypt = require('bcrypt');
+
 const UserSchema = new Schema({
     //schema :cau truc cua 1 collection
     name:{type:String, default:'unknown',unique:true},
@@ -10,7 +12,8 @@ const UserSchema = new Schema({
     
 })
 // => chuyen tu Schema sang Model
- const User = mongoose.model('User',UserSchema)
+ const User = mongoose.model('User',UserSchema);
+ 
  const insertUser = async (name,email,password) =>{
     try {
     	//Mã hoá password trước khi lưu vào DB
@@ -29,4 +32,3 @@ const UserSchema = new Schema({
     }
 }
 module.exports = {User, insertUser}
-// module.exports ={User}
