@@ -1,27 +1,33 @@
 const Q = require('q');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
-const mongoose = require("mongoose");
 const bcrypt = require('bcrypt');
-const {userCollection,User} = require('./user.collection');
-// const User = require('./user.collection');
+const User = require('./user.collection');
 
-module.exports.register = async (req, res) =>{
-	let {name, email, password} = req.body  
-    try {
-        await insertUser(name, email, password)
-	  	res.json({
-	  		result: 'ok',
-	  		message: 'User register succesfull'
-	  	})		
-	} catch(error) {
-		res.json({
-            result: 'failed',
-            message: `Error : ${error}`
-        })
-	}
-}
 module.exports = {
+    register: async (params) =>{
+        let {name, email, password} = params;
+            try {
+                //Mã hoá password trước khi lưu vào DB
+                const encryptedPassword = await bcrypt.hash(password, 10)//saltRounds = 10    
+                await User.insert({
+                    name: name,
+                    email: email,
+                    password: encryptedPassword
+                }).then((user, err) => {
+                    if (err) {
+                        throw err;
+                    }
+                    return user;
+                })
+            } catch(error) {
+                
+                if (error.code === 11000) {
+                    throw "Tên hoặc email đã tồn tại!!"
+                }
+                
+            }
+    },
 
     login: (userParams) => {
         let defer = Q['defer']();

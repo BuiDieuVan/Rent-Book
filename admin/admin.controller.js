@@ -1,4 +1,4 @@
-const Book = require('./admin/book.collection')
+const Book = require('../book/book.model')
 
 
 /* POST */
